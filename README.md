@@ -33,5 +33,12 @@ Number of words of length 4 is 2
 Number of words of length 5 is 2
 Number of words of length 7 is 1
 Number of words of length 10 is 1
-The most frequently occurring word length is 2, for word lengths of [4, 5]
+The most frequently occurring word length is 2, for word lengths of 4 & 5
 ```
+
+## Running tests
+1. Create a redis container
+    ```shell script
+    docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 --name redis_quarkus_test -p 6379:6379 redis:5.0.6
+    ```
+2. Run J-unit 5 tests as normal (src/main/jva/org.jaspinall.file/FileResourceTest.java)
