@@ -69,6 +69,10 @@ public class FileResource {
                 .replace("*", "")
                 .replace("!", "")
                 .replace("?", "")
+                .replace("\"", "")
+                .replace(";", "")
+                .replace(":", "")
+                .replaceAll("\\s+", " ")
                 .split(" ");
     }
 }

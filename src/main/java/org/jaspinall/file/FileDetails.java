@@ -31,12 +31,20 @@ public class FileDetails {
         printWriter.println("Word count = " + wordCount);
         printWriter.println("Average word length = " + averageFormat.format(averageLength));
         lengths.keySet().forEach(lengthKey -> printWriter.println(String.format("Number of words of length %d is %d", lengthKey, lengths.get(lengthKey))));
-        printWriter.println(String.format("The most frequently occurring word length is %d for word lengths of %s", max, maxKeys.toString()));
+        printWriter.println(String.format("The most frequently occurring word length is %d, for word lengths of %s", max, maxKeysString()));
         return stringWriter.toString();
     }
 
     private void mostFrequentLengths() {
         this.max = Collections.max(this.lengths.values());
         this.maxKeys = this.lengths.entrySet().stream().filter(it -> it.getValue() == max).map(Map.Entry::getKey).collect(Collectors.toList());
+    }
+
+    private String maxKeysString() {
+        String maxKeysString = maxKeys.stream().map(String::valueOf).collect(Collectors.joining(", "));
+        int index = maxKeysString.lastIndexOf(", ");
+        if ( index >= 0)
+            maxKeysString = new StringBuilder(maxKeysString).replace(index, index+1, " &").toString();
+        return maxKeysString;
     }
 }
