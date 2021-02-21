@@ -1,7 +1,6 @@
 package org.jaspinall.file;
 
 import io.smallrye.mutiny.Uni;
-import org.graalvm.collections.Pair;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 import javax.inject.Inject;
@@ -10,6 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Path("/files")
@@ -23,8 +23,8 @@ public class FileResource {
     }
 
     @POST
-    public String create(String text) {
-        String key = UUID.randomUUID().toString();
+    @Path("/{key}")
+    public String create(@PathParam("key") String key, String text) {
         service.set(key, text);
         return key;
     }
@@ -46,9 +46,7 @@ public class FileResource {
         FileDetails fileDetails = new FileDetails(key);
         fileDetails.wordCount = words.length;
         fileDetails.averageLength = averageWordLength(words);
-        fileDetails.lengths.keySet().forEach(lengthKey ->
-            fileDetails.lengths.put(lengthKey, countWordsOfLength(words, lengthKey))
-        );
+        fileDetails.lengths = countWordsOfLength(words);
         return fileDetails;
     }
 
@@ -56,18 +54,21 @@ public class FileResource {
         return Arrays.stream(words)
                 .map(String::length)
                 .reduce(Integer::sum)
-                .map(integer -> (float) integer / (float) words.length)
+                .map(integer -> (float) integer / words.length)
                 .orElse(0f);
     }
 
-    private int countWordsOfLength(String[] words, int length) {
-        return (int) Arrays.stream(words)
-                .filter(word -> word.length() == length).count();
+    private Map<Integer, Long> countWordsOfLength(String[] words) {
+        return Arrays.stream(words)
+                .map(String::length)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
 
     private String[] splitWords(String text) {
         return text.replace(".", "")
                 .replace("*", "")
+                .replace("!", "")
+                .replace("?", "")
                 .split(" ");
     }
 }
