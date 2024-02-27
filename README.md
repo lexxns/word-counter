@@ -1,7 +1,11 @@
-# synalogik-test project
+# Word-counter
+This mini-project is an example of using Quarkus with Dependency Injection
+- We use Redis as a Dependency example
 
-This project uses Quarkus https://quarkus.io/ as a framework
-and utilises redis https://redis.io/ as a data-store
+This API will allow you to upload a text file and fetch details of the uploaded documents
+
+Quarkus https://quarkus.io/
+Redis https://redis.io/
 
 ## Local Standup
 Create a redis container & run App:
